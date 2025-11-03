@@ -4,8 +4,7 @@ import '../widgets/anatomy_background.dart';
 import '../widgets/gradient_checkbox.dart';
 import '../widgets/social_login_button.dart';
 import '../theme/anatomy_colors.dart';
-import 'package:flutter/material.dart';
-import 'dart:ui'; // optional for effects like blur or gradients
+import '../screens/student_dashboard.dart'; // Add this import
 
 class VRAnatomyLoginScreen extends StatefulWidget {
   const VRAnatomyLoginScreen({super.key});
@@ -17,10 +16,40 @@ class VRAnatomyLoginScreen extends StatefulWidget {
 class _VRAnatomyLoginScreenState extends State<VRAnatomyLoginScreen> {
   bool _obscurePassword = true;
   bool _rememberMe = false;
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
 
   void _login() {
-    // TODO: Implement VR Anatomy login logic
-    print('VR Anatomy Login attempted');
+    final email = _emailController.text.trim();
+    final password = _passwordController.text.trim();
+
+    // Check for specific credentials
+    if (email == "zainabtouseef@itu.edu.pk" && password == "zainab123") {
+      // Navigate to Student Dashboard
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(
+          builder: (context) => StudentDashboard(),
+        ),
+      );
+    } else {
+      // Show error for invalid credentials
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Invalid email or password'),
+          backgroundColor: const Color(0xFFFF6B8B),
+          behavior: SnackBarBehavior.floating,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _emailController.dispose();
+    _passwordController.dispose();
+    super.dispose();
   }
 
   @override
@@ -102,6 +131,7 @@ class _VRAnatomyLoginScreenState extends State<VRAnatomyLoginScreen> {
                   label: "Email",
                   hint: "student.anatomy@university.edu",
                   icon: Icons.email_outlined,
+                  controller: _emailController,
                 ),
 
                 const SizedBox(height: 20),
@@ -112,6 +142,7 @@ class _VRAnatomyLoginScreenState extends State<VRAnatomyLoginScreen> {
                   hint: "••••••••",
                   icon: Icons.lock_outline,
                   isPassword: true,
+                  controller: _passwordController,
                 ),
 
                 const SizedBox(height: 30),
@@ -233,6 +264,39 @@ class _VRAnatomyLoginScreenState extends State<VRAnatomyLoginScreen> {
                     ),
                   ],
                 ),
+
+                // Demo Credentials Hint
+                const SizedBox(height: 20),
+                GestureDetector(
+                  onTap: () {
+                    // Auto-fill demo credentials
+                    _emailController.text = "zainabtouseef@itu.edu.pk";
+                    _passwordController.text = "zainab123";
+                    setState(() {});
+                  },
+                  child: Container(
+                    padding: const EdgeInsets.all(12),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10),
+                      color: Colors.white.withOpacity(0.1),
+                      border: Border.all(color: Colors.white.withOpacity(0.2)),
+                    ),
+                    child: const Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Icon(Icons.lightbulb_outline, color: Color(0xFF00D4FF), size: 16),
+                        SizedBox(width: 8),
+                        Text(
+                          "Tap to auto-fill demo credentials",
+                          style: TextStyle(
+                            color: Color(0xFF00D4FF),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
           ),
@@ -246,6 +310,7 @@ class _VRAnatomyLoginScreenState extends State<VRAnatomyLoginScreen> {
     required String hint,
     required IconData icon,
     bool isPassword = false,
+    required TextEditingController controller,
   }) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -264,6 +329,7 @@ class _VRAnatomyLoginScreenState extends State<VRAnatomyLoginScreen> {
             borderRadius: BorderRadius.circular(15),
           ),
           child: TextField(
+            controller: controller,
             obscureText: isPassword ? _obscurePassword : false,
             style: const TextStyle(color: Colors.white),
             decoration: InputDecoration(

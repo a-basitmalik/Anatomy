@@ -6,7 +6,9 @@ import '../widgets/category_card.dart';
 import '../widgets/score_item.dart';
 import '../widgets/dashboard_header.dart';
 import '../theme/anatomy_colors.dart';
-
+import '../screens/categories_screen.dart';
+import '../screens/learning_progress_screen.dart';
+import '../screens/queries_screen.dart'; // Add this import
 class StudentDashboard extends StatefulWidget {
   const StudentDashboard({super.key});
 
@@ -32,32 +34,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
   ];
 
   void _onCategoryTap(AnatomyCategory category) {
-    // TODO: Navigate to category detail screen
-    print('Category tapped: ${category.level}');
-
-    // Show temporary dialog
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        backgroundColor: const Color(0xFF1A1F3D),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
-        title: Text(
-          category.level,
-          style: const TextStyle(color: Colors.white),
-        ),
-        content: Text(
-          'Opening ${category.title} content...',
-          style: const TextStyle(color: Colors.white70),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text(
-              'Close',
-              style: TextStyle(color: Color(0xFF9E5BFF)),
-            ),
-          ),
-        ],
+    // Navigate to Categories Screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => CategoriesScreen(level: category),
       ),
     );
   }
@@ -117,15 +98,11 @@ class _StudentDashboardState extends State<StudentDashboard> {
   }
 
   void _onQueriesTap() {
-    // TODO: Navigate to queries screen
-    print('Queries tapped');
-
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: const Text('Opening help center...'),
-        backgroundColor: const Color(0xFF00D4FF),
-        behavior: SnackBarBehavior.floating,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
+    // Navigate to queries screen
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => QueriesScreen(),
       ),
     );
   }
@@ -187,86 +164,106 @@ class _StudentDashboardState extends State<StudentDashboard> {
   }
 
   Widget _buildProgressSection() {
-    return GlassCard(
-      child: Padding(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text(
-              "Learning Progress",
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => LearningProgressScreen(),
+          ),
+        );
+      },
+      child: GlassCard(
+        child: Padding(
+          padding: const EdgeInsets.all(20),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  const Text(
+                    "Learning Progress",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white70,
+                    size: 16,
+                  ),
+                ],
               ),
-            ),
-            const SizedBox(height: 20),
+              const SizedBox(height: 20),
 
-            // Overall Progress Circle
-            Row(
-              children: [
-                // Progress Circle
-                SizedBox(
-                  width: 100,
-                  height: 100,
-                  child: Stack(
-                    children: [
-                      CircularProgressIndicator(
-                        value: overallProgress / 100,
-                        strokeWidth: 8,
-                        backgroundColor: Colors.white24,
-                        valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF00FF88)),
-                      ),
-                      Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "${overallProgress.toInt()}%",
-                              style: const TextStyle(
-                                color: Colors.white,
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              "Overall",
-                              style: TextStyle(
-                                color: Colors.white70,
-                                fontSize: 12,
-                              ),
-                            ),
-                          ],
+              // Overall Progress Circle
+              Row(
+                children: [
+                  // Progress Circle
+                  SizedBox(
+                    width: 100,
+                    height: 100,
+                    child: Stack(
+                      children: [
+                        CircularProgressIndicator(
+                          value: overallProgress / 100,
+                          strokeWidth: 8,
+                          backgroundColor: Colors.white24,
+                          valueColor: const AlwaysStoppedAnimation<Color>(Color(0xFF00FF88)),
                         ),
-                      ),
-                    ],
-                  ),
-                ),
-
-                const SizedBox(width: 20),
-
-                // Recent Scores
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        "Recent Scores",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
+                        Center(
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "${overallProgress.toInt()}%",
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                              Text(
+                                "Overall",
+                                style: TextStyle(
+                                  color: Colors.white70,
+                                  fontSize: 12,
+                                ),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 10),
-                      ...recentScores.map((score) => ScoreItem(score: score)),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-              ],
-            ),
-          ],
+
+                  const SizedBox(width: 20),
+
+                  // Recent Scores
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const Text(
+                          "Recent Scores",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 10),
+                        ...recentScores.map((score) => ScoreItem(score: score)),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ],
+          ),
         ),
       ),
     );

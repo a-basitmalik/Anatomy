@@ -5,6 +5,7 @@ class GlassCard extends StatelessWidget {
   final Widget child;
   final double borderRadius;
   final double blur;
+  final EdgeInsetsGeometry? margin; //
   final VoidCallback? onTap;
 
   const GlassCard({
@@ -12,6 +13,7 @@ class GlassCard extends StatelessWidget {
     required this.child,
     this.borderRadius = 20,
     this.blur = 10,
+    this.margin,
     this.onTap,
   });
 
@@ -24,6 +26,7 @@ class GlassCard extends StatelessWidget {
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: blur, sigmaY: blur),
           child: Container(
+            margin: margin, // ✅ use margin
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.1),
               borderRadius: BorderRadius.circular(borderRadius),

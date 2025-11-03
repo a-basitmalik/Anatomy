@@ -19,7 +19,7 @@ class VREnatomyApp extends StatelessWidget {
           secondary: Color(0xFF9E5BFF),
         ),
       ),
-      home: const StudentDashboard(), // Changed to dashboard for testing
+      home: const  VRAnatomyLoginScreen(), // Changed to dashboard for testing
       // home: const VRAnatomyLoginScreen(), // Use this for actual login flow
       debugShowCheckedModeBanner: false,
     );
